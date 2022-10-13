@@ -37,6 +37,10 @@
 2022-07-20
 
 ```python
+# https://towardsdatascience.com/topic-modeling-with-bert-779f7db187e6
+```
+
+```python
 #!pip install bertopic
 ```
 
