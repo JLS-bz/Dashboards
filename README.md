@@ -1,5 +1,4 @@
-# Section 1
-Exploratory Analysis of Keywords in Forums on Dissociation
+# Section 1: Exploratory Analysis of Keywords in Forums on Dissociation
 ================
 2022-03-25
 
@@ -35,8 +34,7 @@ Exploratory Analysis of Keywords in Forums on Dissociation
 ![](unnamed-chunk-5-1.png)<!-- -->
 
 
-# Section 2
-Topic Modeling with BERT and TF-IDF
+# Section 2: Topic Modeling with BERT and TF-IDF
 ================
 2022-07-20
 
@@ -174,93 +172,6 @@ top_n_words = extract_top_n_words_per_topic(tf_idf, count, docs_per_topic, n=20)
 topic_sizes = extract_topic_sizes(docs_df); topic_sizes.head(10)
 ```
 
-    /home/jls/anaconda3/lib/python3.9/site-packages/sklearn/utils/deprecation.py:87: FutureWarning: Function get_feature_names is deprecated; get_feature_names is deprecated in 1.0 and will be removed in 1.2. Please use get_feature_names_out instead.
-      warnings.warn(msg, category=FutureWarning)
-
-
-
-
-
-<div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>Topic</th>
-      <th>Size</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>1</th>
-      <td>0</td>
-      <td>2663</td>
-    </tr>
-    <tr>
-      <th>0</th>
-      <td>-1</td>
-      <td>601</td>
-    </tr>
-    <tr>
-      <th>2</th>
-      <td>1</td>
-      <td>127</td>
-    </tr>
-    <tr>
-      <th>6</th>
-      <td>5</td>
-      <td>86</td>
-    </tr>
-    <tr>
-      <th>9</th>
-      <td>8</td>
-      <td>54</td>
-    </tr>
-    <tr>
-      <th>3</th>
-      <td>2</td>
-      <td>31</td>
-    </tr>
-    <tr>
-      <th>7</th>
-      <td>6</td>
-      <td>22</td>
-    </tr>
-    <tr>
-      <th>4</th>
-      <td>3</td>
-      <td>19</td>
-    </tr>
-    <tr>
-      <th>8</th>
-      <td>7</td>
-      <td>17</td>
-    </tr>
-    <tr>
-      <th>5</th>
-      <td>4</td>
-      <td>16</td>
-    </tr>
-  </tbody>
-</table>
-</div>
-
-
-
-
 ```python
 top_n_words[0][:10]
 ```
@@ -302,8 +213,7 @@ top_n_words[1][:10]
 
 
 
-# Section 3
-Topic Modeling with SparkNLP tf-idf LDA
+# Section 3: Topic Modeling with SparkNLP tf-idf LDA
 ================
 2022-07-26
 
