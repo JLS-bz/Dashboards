@@ -9,7 +9,6 @@ Exploratory Analysis of Keywords in Forums on Dissociation
 -   From forum about depersonalization/derealization.
 -   Contains post title, post content, post date
 -   Data date range: 2022-03-01 to 2022-03-27
--   Ideas: compare topics to DSM5 symptoms
 
 #### Most commonly used words:
 
@@ -34,3 +33,16 @@ Exploratory Analysis of Keywords in Forums on Dissociation
     ## increasing max.overlaps
 
 ![](unnamed-chunk-5-1.png)<!-- -->
+
+
+# Topic Modeling with BERT and TF-IDF
+================
+2022-07-20
+
+
+
+
+# Topic Modeling with SparkNLP tf-idf LDA
+================
+2022-07-26
+
