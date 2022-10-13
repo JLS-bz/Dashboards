@@ -120,15 +120,8 @@ plt.colorbar()
 
 
 
-    <matplotlib.colorbar.Colorbar at 0x7f92ee57c7c0>
-
-
-
-
     
-![png](TopicModeling_BERT_TF-IDF_files/TopicModeling_BERT_TF-IDF_6_1.png)
-    
-
+![](BERT_TF-IDF wordcloud.png)<!-- -->
 
 
 ```python
