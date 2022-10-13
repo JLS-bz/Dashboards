@@ -1,5 +1,4 @@
 # Section 1: Exploratory Analysis of Keywords in Forums on Dissociation
-================
 2022-03-25
 
 ##### Description of raw data:
@@ -35,7 +34,6 @@
 
 
 # Section 2: Topic Modeling with BERT and TF-IDF
-================
 2022-07-20
 
 ```python
@@ -214,7 +212,6 @@ top_n_words[1][:10]
 
 
 # Section 3: Topic Modeling with SparkNLP tf-idf LDA
-================
 2022-07-26
 
 
