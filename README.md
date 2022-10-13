@@ -1,4 +1,4 @@
-# Dashboards
+# Section 1
 Exploratory Analysis of Keywords in Forums on Dissociation
 ================
 2022-03-25
@@ -35,14 +35,15 @@ Exploratory Analysis of Keywords in Forums on Dissociation
 ![](unnamed-chunk-5-1.png)<!-- -->
 
 
-# Topic Modeling with BERT and TF-IDF
+# Section 2
+Topic Modeling with BERT and TF-IDF
 ================
 2022-07-20
 
 
-
-
-# Topic Modeling with SparkNLP tf-idf LDA
+# Section 3
+Topic Modeling with SparkNLP tf-idf LDA
 ================
 2022-07-26
+
 
