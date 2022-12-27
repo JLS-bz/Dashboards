@@ -1,28 +1,29 @@
 # Section 1: Exploratory Analysis of Keywords in Forums on Dissociation
 2022-03-25
 
-##### Description of raw data:
+## Description of raw data:
 
 -   Webscraped using PRAW, Reddit’s API
 -   From forum about depersonalization/derealization.
 -   Contains post title, post content, post date
 -   Data date range: 2022-03-01 to 2022-03-27
 
-#### Most commonly used words:
+## Most commonly used words:
 
-![](unnamed-chunk-2-1.png)<!-- -->![](unnamed-chunk-2-2.png)<!-- -->
+![Most Commonly Used Words](Images/MostCommonWords1.png)<!-- -->![](Images/MostCommonWords2.png)<!-- -->
 
-#### Most common positive and negative words:
 
-![](unnamed-chunk-3-1.png)<!-- -->
+## Most common positive and negative words:
 
-#### Relationships between words: n-grams and correlations
+![](Images/CommonPosNegWords.png)<!-- -->
 
-##### Visualizing a network of bigrams:
+## Relationships between words: n-grams and correlations
 
-![](unnamed-chunk-4-1.png)<!-- -->
+### Visualizing a network of bigrams:
 
-##### Centrality of Words
+![](Images/NetworkBigrams.png)<!-- -->
+
+## Centrality of Words
 
     ## Warning in graph_from_data_frame(x, directed = directed): In `d' `NA' elements
     ## were replaced with string "NA"
@@ -30,190 +31,91 @@
     ## Warning: ggrepel: 140 unlabeled data points (too many overlaps). Consider
     ## increasing max.overlaps
 
-![](unnamed-chunk-5-1.png)<!-- -->
+![](Images/CentralityWords.png)<!-- -->
 
 
-# Section 2: Topic Modeling with BERT and TF-IDF
-2022-07-20
+# Section 2: Dynamic Topic Modeling with BERT
+2022-12-26
 
-```python
-# https://towardsdatascience.com/topic-modeling-with-bert-779f7db187e6
-```
+> Objective: Compare topic modeling outputs based on select hyperparameters and different custom sub-models.
 
-```python
-#!pip install bertopic
-```
+## Work flow:
+1. Enable GPU in JupyterNotebook
+2. Import dataset and BERTopic
+3. Select data
+4. Choose ***hyperparameters*** and load model
+5. Fit data onto ***custom model*** with fit_transformer()
+6. Access topics generated
+7. Data visualization: (a) topic word score bar charts; (b) probabilities; (c) time-dependent graphs
+8. Manual vs Automatic topic reduction?
 
+## Definition of Hyperparameters:
+1. embedding_model
 
-```python
-import pandas as pd
+    Chosen sentence transformer: "all-MiniLM-L6-v2"
 
-# Reading file from local storage
-file_location = r'/home/jls/JN/dpdr.csv'
-file_type = "csv"
+2. top_n_words
 
-dfs = pd.read_csv(file_location)
-doc = dfs.loc[:,"post"]
-print(doc)
-#df.count()
-```
+    Def: number of words per topic extracted
+    Citation recommends: value below 30 and preferably between 10 and 20
 
-    0       LolThere is no way out of this , I have offici...
-    1       I’m afraid I’ve been dealing with a 5 day long...
-    2       If you have tension in your head, does it feel...
-    3       Parnate and lamotrigineHey everyone,\n\nI just...
-    4       Short discussion of the film "Numb" which is t...
-                                  ...                        
-    3631                          r/dpdr Subdirect Statistics
-    3632    COVID and DPDR(not here to argue about vaccina...
-    3633    Relief after 5 months. Ask me anything:)Finall...
-    3634    It's so intense that I feel like I don't even ...
-    3635    Anyone tried l tyrosine?I’ve heard that’s a go...
-    Name: post, Length: 3636, dtype: object
+3. n_gram_range
 
+    Range = (2,3)
 
+    The following will be selected: bigrams (groups of 2 consec. words) and trigrams (groups of 3 consec. words).
 
-```python
-from sentence_transformers import SentenceTransformer
-model = SentenceTransformer('distilbert-base-nli-mean-tokens')
-embeddings = model.encode(doc, show_progress_bar=True)
-```
+4. min_topic_size
 
-
-    Batches:   0%|          | 0/114 [00:00<?, ?it/s]
-
-
-
-```python
-import umap
-umap_embeddings = umap.UMAP(n_neighbors=15, 
-                            n_components=5, 
-                            metric='cosine').fit_transform(embeddings)
-```
-
-
-```python
-import hdbscan
-cluster = hdbscan.HDBSCAN(min_cluster_size=15,
-                          metric='euclidean',                      
-                          cluster_selection_method='eom').fit(umap_embeddings)
-```
-
-
-```python
-import matplotlib.pyplot as plt
-
-# Prepare data
-umap_data = umap.UMAP(n_neighbors=15, n_components=2, min_dist=0.0, metric='cosine').fit_transform(embeddings)
-result = pd.DataFrame(umap_data, columns=['x', 'y'])
-result['labels'] = cluster.labels_
-
-# Visualize clusters
-fig, ax = plt.subplots(figsize=(20, 10))
-outliers = result.loc[result.labels == -1, :]
-clustered = result.loc[result.labels != -1, :]
-plt.scatter(outliers.x, outliers.y, color='#BDBDBD', s=1)
-plt.scatter(clustered.x, clustered.y, c=clustered.labels, s=1, cmap='hsv_r')
-plt.colorbar()
-```
-
-
-
-
+    Lower value = more topics; higher value = less topics.
     
-![](BERT_TF-IDF wordcloud.png)<!-- -->
+    It is advised to play around with this value depending on the size of the dataset. 
+
+5. nr_topics
+
+    Number of topics can be reduced by merging similar pairs of topics, according to the cosine similarity between c-TF-IDF vectors.
+
+6. calculate_probabilities
+
+    Set to TRUE, so GPU will be enabled in JupyterNotebook.
 
 
-```python
-docs_df = doc.to_frame().rename(columns = {'post':'Doc'})
-docs_df['Topic'] = cluster.labels_
-docs_df['Doc_ID'] = range(len(docs_df))
-docs_df
-docs_per_topic = docs_df.groupby(['Topic'], as_index = False).agg({'Doc': ' '.join})
-```
+## Sub-model Components:
 
+1. Dimensionality Reduction -> PCA vs t-SNE vs UMAP
 
-```python
-import numpy as np
-from sklearn.feature_extraction.text import CountVectorizer
+    Many clustering algorithms have difficulty with high dimensional data. Given that 384 dimensions are not necessary for an accurate representation of our text-based data, it is recommended to compress the number of dimensions to 2 or 3 for better clustering efficiency. 
 
-def c_tf_idf(documents, m, ngram_range=(1, 1)):
-    count = CountVectorizer(ngram_range=ngram_range, stop_words="english").fit(documents)
-    t = count.transform(documents).toarray()
-    w = t.sum(axis=1)
-    tf = np.divide(t.T, w)
-    sum_t = t.sum(axis=0)
-    idf = np.log(np.divide(m, sum_t)).reshape(-1, 1)
-    tf_idf = np.multiply(tf, idf)
+    **PCA**: preserves global structure of data but performs poorly for local structures. 
 
-    return tf_idf, count
-  
-tf_idf, count = c_tf_idf(docs_per_topic.Doc.values, m=len(doc))
-```
+    **t-SNE**: preserves local structures but performs poorly for global structures
 
+    **UMAP**: does well to preserve both global and local structures. Increasing n_neighbors = preserve more global structures; decreasing n_neighbors = preserve more local structures.
 
-```python
-def extract_top_n_words_per_topic(tf_idf, count, docs_per_topic, n=20):
-    words = count.get_feature_names()
-    labels = list(docs_per_topic.Topic)
-    tf_idf_transposed = tf_idf.T
-    indices = tf_idf_transposed.argsort()[:, -n:]
-    top_n_words = {label: [(words[j], tf_idf_transposed[i][j]) for j in indices[i]][::-1] for i, label in enumerate(labels)}
-    return top_n_words
+    Thus, **UMAP** will be utilized and the optimal **n_neighbors** value will be searched for.
 
-def extract_topic_sizes(df):
-    topic_sizes = (df.groupby(['Topic'])
-                     .Doc
-                     .count()
-                     .reset_index()
-                     .rename({"Topic": "Topic", "Doc": "Size"}, axis='columns')
-                     .sort_values("Size", ascending=False))
-    return topic_sizes
+2. Clustering -> HDBSCAN vs k-Means
 
-top_n_words = extract_top_n_words_per_topic(tf_idf, count, docs_per_topic, n=20)
-topic_sizes = extract_topic_sizes(docs_df); topic_sizes.head(10)
-```
+    Clustering improves the accuracy of topic representations.
 
-```python
-top_n_words[0][:10]
-```
+3. CountVectorizer
 
+## Description of Models:
 
+ModelA: UMAP -> HDBSCAN -> CountVectorizer
+ModelB: UMAP -> k-Means -> CountVectorizer
 
+## Results:
 
-    [('really', 0.007758313612847956),
-     ('feeling', 0.007749180482272903),
-     ('know', 0.007713640753396208),
-     ('ve', 0.007476064080397414),
-     ('think', 0.007466554247109187),
-     ('time', 0.007440581170049944),
-     ('life', 0.0074352045216576805),
-     ('felt', 0.007325839413153062),
-     ('feels', 0.007263618785323988),
-     ('don', 0.007243585572851497)]
+### ModelA: UMAP -> HDBSCAN
 
+## References:
 
+https://towardsdatascience.com/interactive-topic-modeling-with-bertopic-1ea55e7d73d8
 
+https://colab.research.google.com/drive/1ClTYut039t-LDtlcd-oQAdXWgcsSGTw9?usp=sharing
 
-```python
-top_n_words[1][:10]
-```
-
-
-
-
-    [('poll', 0.27884752064544444),
-     ('www', 0.17575169562801965),
-     ('view', 0.16821173441824555),
-     ('com', 0.16627149629544336),
-     ('reddit', 0.16545962703344716),
-     ('https', 0.16530972633780874),
-     ('donate', 0.01729449223848627),
-     ('nlm', 0.016815957968685864),
-     ('ncbi', 0.016815957968685864),
-     ('nih', 0.016411363008509334)]
-
-
+https://www.pinecone.io/learn/bertopic/
 
 # Section 3: Topic Modeling with SparkNLP tf-idf LDA
 2022-07-26
