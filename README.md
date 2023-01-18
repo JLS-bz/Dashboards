@@ -68,7 +68,7 @@ A popular and easy way to retrieve data from Reddit is through the [**PushShift.
 
 As a result, the more manual use of PushShift.io itself is utilized, due to its 100% operational status as seen [here](https://stats.uptimerobot.com/l8RZDu1gBG). Screenshot taken on Jan 17, 2023:
 
-<center><img src="Images/Pushshift_status.png" width="400"/></center>
+<img src="Images/Pushshift_status.png" width="400"/>
 
 However, there are still some limitations:
 1. Reddit's PushShift.io fundamentally limits each post retrieval amount to 1000.
@@ -133,7 +133,34 @@ Thus, it seems that the optimal number of topics is between 5 and 10; an eye est
 Finally, words that most embody these six topics are extracted:
 ![](Images/extracted_topic_words.png)<!-- -->
 
+From a glance, these topic words do not seem very coherent. So, TF-IDF and LDA will be performed again for unigrams and n-grams separately.
+
+Given that the LDA algorithm is probabilistic in nature, the following two parameters will be set for further topic modeling:
+1. Max iterations = 40.
+
+The previous LDA was set to maxIter = 10. Increasing the number of iterations can help improve result stability, at the cost of increased computational resources.
+
+2. Seed = 123
+
+LDA relies on a random number generator for initialization, and using a seed can help ensure consistency across multiple runs.
+
+**Topics based on Unigrams & N-Grams:**
+
+![](Images/lda_all.png)<!-- -->
+
+
+**Topics based on Unigrams:**
+
+![](Images/lda_unigrams.png)<!-- -->
+
+
+**Topics based on N-Grams:**
+
+![](Images/lda_ngrams.png)<!-- -->
+
 ## Data Visualization
+
+
 
 ## References:
 Obedkova, M. (2020, May). Topic Modelling with PySpark and Spark NLP. GitHub. Retrieved January 17, 2023, from https://github.com/maobedkova/TopicModelling_PySpark_SparkNLP 
