@@ -33,7 +33,7 @@
 
 ![](Images/CentralityWords.png)<!-- -->
 
-# Section 2: Topic Modeling with ID-IDF and LDA
+# Section 2: Topic Modeling with TF-IDF and LDA
 > Large segments of code were adapted from Obedkova's (2020) tutorial, namely in the following sections: SparkNLP Pipelines, PoS-based Filtering, and Vectorization.
 
 ## Dependencies: 
