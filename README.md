@@ -67,7 +67,7 @@ A csv file containing webscraped data from Reddit's r/DPDR is imported. To see t
 A popular and easy way to retrieve data from Reddit is through the [**PushShift.io**](https://reddit-api.readthedocs.io/en/latest/) API Wrapper [**PMAW**](https://github.com/mattpodolak/pmaw), [**PSAW**](https://psaw.readthedocs.io/en/latest/), or [**PRAW**](https://praw.readthedocs.io/en/stable/). Unfortunately, many attempts at using them produced questionable results - many post submissions were missing within specified timeframes, as well as producing numerous duplicates of ones that were retrieved. The former has been confirmed by Elizaveta Sivak's article within the Summer Institute in Computational Social Science website, as seen [**here**](https://sicss.io/2021/materials/hse/reddit_.html). These wrappers do not have access to posts in certain timeframes.
 
 As a result, the more manual use of PushShift.io itself is utilized, due to its 100% operational status as seen [here](https://stats.uptimerobot.com/l8RZDu1gBG). Here is a screenshot taken on Jan 17, 2023:
-![](Images/Pushshift status.png)<!-- -->
+![](Images/Pushshift_status.png)<!-- -->
 
 However, there are still some limitations:
 1. Reddit's PushShift.io fundamentally limits each post retrieval amount to 1000.
@@ -78,7 +78,7 @@ Thus, temporarily for now, the current dataset is described as the following:
 - sorted by submission date in descending order, starting from January 15, 2023
 
 Here is a glimpse of the dataset:
-![](Images/dpdr Dataset glimpse.png)<!-- -->
+![](Images/dpdr_Dataset_glimpse.png)<!-- -->
 
 ## SparkNLP Pipelines
 ### No.1: Unigrams & PoS
@@ -97,7 +97,7 @@ This pipeline uses the following annotators:
 Contrary to commonly used NLP pipelines, a Lemmatizer Annotator is not used, in order to preserve the various uses of verb tenses. This affects generated n-grams. 
 
 Output:
-![](Images/Pipeline1 output.png)<!-- -->
+![](Images/Pipeline1_output.png)<!-- -->
 
 ### No.2: N-Grams
 PoS-based filtering is used in this pipeline to remove strange word combinations and reduce vocab size.
@@ -110,10 +110,10 @@ The following pipeline is used to correspond PoS tag n-grams with word n-grams:
 
 ## PoS-based Filtering
 Unigrams:
-![](Images/filtered unigrams.png)<!-- -->
+![](Images/filtered_unigrams.png)<!-- -->
 
 Bigrams and Trigrams:
-![](Images/filtered ngrams.png)<!-- -->
+![](Images/filtered_ngrams.png)<!-- -->
 
 ## Vectorization: TF-IDF
 Unigram and n-gram data as shown above are first combined. Then, **TF** (term frequency) vectorization is performed with **CountVectorizer** in PySpark. Finally, **IDF**(inverse document frequency) is used to lower word frequency scores.
@@ -130,7 +130,7 @@ When performing LDA, the number of topics is fixed and predetermined. To find th
 Thus, it seems that the optimal number of topics is between 5 and 10; an eye estimated NumTopic = 6 will be utilized.
 
 Finally, words that most embody these six topics are extracted:
-![](Images/extracted topic words.png)<!-- -->
+![](Images/extracted_topic_words.png)<!-- -->
 
 ## Data Visualization
 
