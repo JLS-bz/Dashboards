@@ -33,8 +33,118 @@
 
 ![](Images/CentralityWords.png)<!-- -->
 
+# Section 2: Topic Modeling with ID-IDF and LDA
+> Large segments of code were adapted from Obedkova's (2020) tutorial, namely in the following sections: SparkNLP Pipelines, PoS-based Filtering, and Vectorization.
 
-# Section 2: Dynamic Topic Modeling with BERT
+## Dependencies: 
+``` python
+# Install pyspark
+! pip install pyspark==3.3.0
+! apt-get install openjdk-8-jdk-headless -qq > /dev/null
+
+# Install Spark NLP
+! pip install spark-nlp==4.0.2
+
+# Install nltk
+! pip install nltk
+```
+
+## Import SparkNLP and initialize session
+``` python
+import sparknlp
+
+spark = sparknlp.start()
+print("Spark NLP version: ", sparknlp.version())
+print("Apache Spark version: ", spark.version)
+```
+Spark NLP version: 4.0.2
+Apache Spark version: 3.30
+
+## Data
+A csv file containing webscraped data from Reddit's r/DPDR is imported. To see the webscraping code, click to view the file **Webscraping for Datasets.ipynb**.
+
+A popular and easy way to retrieve data from Reddit is through the PushShift.io API Wrapper [**PMAW**](https://github.com/mattpodolak/pmaw), [**PSAW**](https://psaw.readthedocs.io/enLarge p/latest/), or [**PRAW**](https://praw.readthedocs.io/en/stable/). Unfortunately, many attempts at using them produced questionable results - many post submissions were missing within specified timeframes, as well as producing numerous duplicates of ones that were retrieved. The former has been confirmed by Elizaveta Sivak's article within the Summer Institute in Computational Social Science website, as seen [**here**](https://sicss.io/2021/materials/hse/reddit_.html). These wrappers do not have access to posts in certain timeframes.
+
+As a result, the more manual use of [**PushShift.io**](https://reddit-api.readthedocs.io/en/latest/) itself is utilized, due to its 100% operational status as seen [here](https://stats.uptimerobot.com/l8RZDu1gBG). Here is a screenshot taken on Jan 17, 2023:
+![](Images/Pushshift status.png)<!-- -->
+
+However, there are still some limitations:
+1. Reddit's PushShift.io fundamentally limits each post retrieval amount to 1000.
+2. There was some difficulty in troubleshooting the use of specific timeframes, i.e., between date1 to date2. 
+
+Thus, temporarily for now, the current dataset is described as the following:
+- n = 1000 post submissions from r/DPDR
+- sorted by submission date in descending order, starting from January 15, 2023
+
+Here is a glimpse of the dataset:
+![](Images/dpdr Dataset glimpse.png)<!-- -->
+
+## SparkNLP Pipelines
+### No.1: Unigrams & PoS
+First, a basic pipeline is used to transform the data into unigrams and their respective Parts of Speech (PoS) labels. N-grams are also found, but may contain questionable combinations; this output will be further processed in the next pipeline.
+
+This pipeline uses the following annotators:
+1. **Document Assembler**: Prepares data into a format that is processable by Spark NLP. This is the entry point for every Spark NLP pipeline. (*Input*: the 'post' column in the current dataset.)
+2. **Tokenizer**: Tokenizes raw text into word pieces, tokens. Identifies tokens with tokenization open standards. A few rules will help customizing it if defaults do not fit user needs.
+3. **Normalizer**: Removes all dirty characters from text following a regex pattern and transforms words based on a provided dictionary.
+4. **Stop Words Cleaner**: Takes a sequence of strings (e.g. the output of a Tokenizer, Normalizer, Lemmatizer, etc.) and drops all the stop words from the input sequences.
+5. **NGram Generator**: Converts the input array of strings (annotatorType TOKEN) into an array of n-grams (annotatorType CHUNK).
+6. **POSTagger**: Averaged Perceptron model to tag words part-of-speech.
+7. **Finisher**: Converts annotation results into a format that easier to use. It is useful to extract the results from Spark NLP Pipelines.
+> Definitions taken from the official SparkNLP website (John Snow Labs, 2021).
+
+Contrary to commonly used NLP pipelines, a Lemmatizer Annotator is not used, in order to preserve the various uses of verb tenses. This affects generated n-grams. 
+
+Output:
+![](Images/Pipeline1 output.png)<!-- -->
+
+### No.2: N-Grams
+PoS-based filtering is used in this pipeline to remove strange word combinations and reduce vocab size.
+
+The following pipeline is used to correspond PoS tag n-grams with word n-grams:
+1. Document Assembler (*Input*: the 'finished_pos' column from the above output.)
+2. Tokenizer
+3. NGram Generator
+4. Finisher
+
+## PoS-based Filtering
+Unigrams:
+![](Images/filtered unigrams.png)<!-- -->
+
+Bigrams and Trigrams:
+![](Images/filtered ngrams.png)<!-- -->
+
+## Vectorization: TF-IDF
+Unigram and n-gram data as shown above are first combined. Then, **TF** (term frequency) vectorization is performed with **CountVectorizer** in PySpark. Finally, **IDF**(inverse document frequency) is used to lower word frequency scores.
+
+## Unsupervised Topic Modeling with LDA (Latent Dirichlet Allocation)
+> LDA (Blei et al., 2003) is one of the most popular topic modeling methods. Each document is made up of various words, and each topic also has various words belonging to it. The aim of LDA is to find topics a document belongs to, based on the words in it.
+
+*Direct quotation from Kulshrestha (2020)*
+
+When performing LDA, the number of topics is fixed and predetermined. To find the optimal number of topics, LDA models with num topics are trained and their corresponding logLikelihood and logPerplexity calculated.
+
+![](Images/likelihood.png) ![](Images/perplexity.png)
+
+Thus, it seems that the optimal number of topics is between 5 and 10; an eye estimated NumTopic = 6 will be utilized.
+
+Finally, words that most embody these six topics are extracted:
+![](Images/extracted topic words.png)<!-- -->
+
+## Data Visualization
+
+## References:
+Obedkova, M. (2020, May). Topic Modelling with PySpark and Spark NLP. GitHub. Retrieved January 17, 2023, from https://github.com/maobedkova/TopicModelling_PySpark_SparkNLP 
+
+
+
+Blei, D., Ng, A. Y., &amp; Jordan, M. I. (2003). Latent Dirichlet Allocation. Journal of Machine Learning, 3, 993–1022. https://doi.org/10.5555/944919.944937 
+
+John Snow Labs. (2021, April 17). Annotators. High Performance NLP with Apache Spark. Retrieved January 17, 2023, from https://nlp.johnsnowlabs.com/docs/en/annotators 
+
+Kulshrestha, R. (2020, September 28). Latent dirichlet allocation. Medium. Retrieved January 17, 2023, from https://towardsdatascience.com/latent-dirichlet-allocation-lda-9d1cd064ffa2 
+
+# Section 3: Dynamic Topic Modeling with BERT --under construction
 2022-12-26
 
 > Objective: Compare topic modeling outputs based on select hyperparameters and different custom sub-models.
@@ -116,568 +226,3 @@ https://towardsdatascience.com/interactive-topic-modeling-with-bertopic-1ea55e7d
 https://colab.research.google.com/drive/1ClTYut039t-LDtlcd-oQAdXWgcsSGTw9?usp=sharing
 
 https://www.pinecone.io/learn/bertopic/
-
-# Section 3: Topic Modeling with SparkNLP tf-idf LDA
-2022-07-26
-
-```python
-# https://github.com/maobedkova/TopicModelling_PySpark_SparkNLP/blob/master/Topic_Modelling_with_PySpark_and_Spark_NLP.ipynb
-```
-
-
-```python
-# Import Spark NLP and initialize session
-
-import sparknlp
-
-spark = sparknlp.start()
-print("Spark NLP version: ", sparknlp.version())
-print("Apache Spark version: ", spark.version)
-```
-
-
-    Spark NLP version:  4.0.2
-    Apache Spark version:  3.3.0
-
-
-
-```python
-import pandas as pd
-import gc
-from pyspark.sql import functions as F
-
-path = '/home/jls/JN/dpdr.csv'
-data = spark.read.csv(path, header=True)
-
-text_col = 'post'
-df = data.select(text_col).filter(F.col(text_col).isNotNull())
-del data
-gc.collect()
-
-df.limit(5).show(truncate=90)
-```
-
-                                                                                    
-
-    +------------------------------------------------------------------------------------------+
-    |                                                                                      post|
-    +------------------------------------------------------------------------------------------+
-    |                                LolThere is no way out of this , I have officially lost it|
-    |I’m afraid I’ve been dealing with a 5 day long severe dissociative episode.I’m 15, and ...|
-    |                                      If you have tension in your head, does it feel like:|
-    |                                                      Parnate and lamotrigineHey everyone,|
-    |"Short discussion of the film ""Numb"" which is the only pop culture focused on deperso...|
-    +------------------------------------------------------------------------------------------+
-    
-
-
-
-```python
-from sparknlp.base import *
-from sparknlp.annotator import *
-
-document_assembler = DocumentAssembler() \
-    .setInputCol("post") \
-    .setOutputCol("document") \
-    .setCleanupMode("shrink")
-
-tokenizer = Tokenizer() \
-  .setInputCols(["document"]) \
-  .setOutputCol("tokenized")
-
-normalizer = Normalizer() \
-     .setInputCols(['tokenized']) \
-     .setOutputCol('normalized') \
-     .setLowercase(True)
-
-lemmatizer = LemmatizerModel.pretrained() \
-     .setInputCols(['normalized']) \
-     .setOutputCol('lemmatized')
-
-stopwords_cleaner = StopWordsCleaner()\
-      .setInputCols(['lemmatized'])\
-      .setOutputCol('unigrams')\
-      .setCaseSensitive(False)\
-
-ngrammer = NGramGenerator() \
-    .setInputCols(['lemmatized']) \
-    .setOutputCol('ngrams') \
-    .setN(3) \
-    .setEnableCumulative(True) \
-    .setDelimiter('_')
-
-pos_tagger = PerceptronModel.pretrained('pos_anc') \
-    .setInputCols(['document', 'lemmatized']) \
-    .setOutputCol('pos')
-
-finisher = Finisher() \
-     .setInputCols(['unigrams', 'ngrams', 'pos'])
-
-from pyspark.ml import Pipeline
-pipeline = Pipeline() \
-    .setStages([document_assembler, 
-            tokenizer,
-            normalizer,
-            lemmatizer,
-            stopwords_cleaner, 
-            ngrammer,
-            pos_tagger,
-            finisher])
-```
-
-    lemma_antbnc download started this may take some time.
-    Approximate size to download 907.6 KB
-    [ | ]lemma_antbnc download started this may take some time.
-    Approximate size to download 907.6 KB
-    Download done! Loading the resource.
-    [ / ]
-
-                                                                                    
-
-    [OK!]
-    pos_anc download started this may take some time.
-    Approximate size to download 3.9 MB
-    [ | ]pos_anc download started this may take some time.
-    Approximate size to download 3.9 MB
-    [ / ]Download done! Loading the resource.
-
-
-    [Stage 7:====================================================>    (11 + 1) / 12]
-
-    [ — ]
-
-                                                                                    
-
-    [OK!]
-
-
-
-```python
-# train the pipeline
-
-nlpModel = pipeline.fit(df).transform(df)
-gc.collect()
-nlpModel.show(5)
-```
-
-    WARNING: An illegal reflective access operation has occurred
-    WARNING: Illegal reflective access by org.apache.spark.util.SizeEstimator$ (file:/home/jls/anaconda3/lib/python3.9/site-packages/pyspark/jars/spark-core_2.12-3.3.0.jar) to field java.util.regex.Pattern.pattern
-    WARNING: Please consider reporting this to the maintainers of org.apache.spark.util.SizeEstimator$
-    WARNING: Use --illegal-access=warn to enable warnings of further illegal reflective access operations
-    WARNING: All illegal access operations will be denied in a future release
-    [Stage 8:>                                                          (0 + 1) / 1]
-
-    +--------------------+--------------------+--------------------+--------------------+
-    |                post|   finished_unigrams|     finished_ngrams|        finished_pos|
-    +--------------------+--------------------+--------------------+--------------------+
-    |LolThere is no wa...|[lolthere, way, o...|[lolthere, be, no...|[RB, VB, DT, NN, ...|
-    |I’m afraid I’ve b...|[im, afraid, ive,...|[im, afraid, ive,...|[NN, JJ, JJ, VB, ...|
-    |If you have tensi...|[tension, head, f...|[if, you, have, t...|[IN, PRP, VBP, NN...|
-    |Parnate and lamot...|[parnate, lamotri...|[parnate, and, la...|    [NN, CC, NN, NN]|
-    |"Short discussion...|[short, discussio...|[short, discussio...|[JJ, NN, IN, DT, ...|
-    +--------------------+--------------------+--------------------+--------------------+
-    only showing top 5 rows
-    
-
-
-                                                                                    
-
-
-```python
-from pyspark.sql import types as T
-
-udf_join_arr = F.udf(lambda x: ' '.join(x), T.StringType())
-nlpModel  = nlpModel.withColumn('finished_pos', udf_join_arr(F.col('finished_pos')))
-nlpModel.columns
-```
-
-
-
-
-    ['post', 'finished_unigrams', 'finished_ngrams', 'finished_pos']
-
-
-
-
-```python
-#second spark nlp pipeline: correspond POS tag ngrams w/ word ngrams
-
-pos_documentAssembler = DocumentAssembler() \
-     .setInputCol('finished_pos') \
-     .setOutputCol('pos_document')
-
-pos_tokenizer = Tokenizer() \
-     .setInputCols(['pos_document']) \
-     .setOutputCol('pos')
-
-pos_ngrammer = NGramGenerator() \
-    .setInputCols(['pos']) \
-    .setOutputCol('pos_ngrams') \
-    .setN(3) \
-    .setEnableCumulative(True) \
-    .setDelimiter('_')
-
-pos_finisher = Finisher() \
-     .setInputCols(['pos', 'pos_ngrams']) \
-
-pos_pipeline = Pipeline() \
-     .setStages([pos_documentAssembler,                  
-                 pos_tokenizer,
-                 pos_ngrammer,  
-                 pos_finisher])
-```
-
-
-```python
-nlpModel = pos_pipeline.fit(nlpModel).transform(nlpModel)
-gc.collect()
-nlpModel.columns
-```
-
-
-
-
-    ['post',
-     'finished_unigrams',
-     'finished_ngrams',
-     'finished_pos',
-     'finished_pos_ngrams']
-
-
-
-
-```python
-#filter for useful POS tags for unigrams
-def filter_pos(words, pos_tags):
-    return [word for word, pos in zip(words, pos_tags) 
-            if pos in ['JJ', 'NN', 'NNS', 'VB', 'VBP']]
-
-udf_filter_pos = F.udf(filter_pos, T.ArrayType(T.StringType()))
-
-nlpModel = nlpModel.withColumn('filtered_unigrams',
-                udf_filter_pos(F.col('finished_unigrams'),
-                               F.col('finished_pos')))
-```
-
-
-```python
-nlpModel.select('filtered_unigrams').limit(5).show(truncate = 90)
-```
-
-    [Stage 9:>                                                          (0 + 1) / 1]
-
-    +------------------------------------------------------------------------------------------+
-    |                                                                         filtered_unigrams|
-    +------------------------------------------------------------------------------------------+
-    |                                                                               [way, lose]|
-    |[im, afraid, ive, deal, day, dissociative, episodeim, far, ive, never, scary, relate, w...|
-    |                                                                              [feel, like]|
-    |                                                                       [parnate, everyone]|
-    |[short, discussion, pop, culture, depersonalization, aware, ofits, film, star, perry, h...|
-    +------------------------------------------------------------------------------------------+
-    
-
-
-                                                                                    
-
-
-```python
-#filter for useful POS combos of ngrams
-def filter_pos_combs(words, pos_tags):
-    return [word for word, pos in zip(words, pos_tags) 
-            if (len(pos.split('_')) == 2 and \
-                pos.split('_')[0] in ['JJ', 'NN', 'NNS', 'VB', 'VBP'] and \
-                 pos.split('_')[1] in ['JJ', 'NN', 'NNS']) \
-            or (len(pos.split('_')) == 3 and \
-                pos.split('_')[0] in ['JJ', 'NN', 'NNS', 'VB', 'VBP'] and \
-                 pos.split('_')[1] in ['JJ', 'NN', 'NNS', 'VB', 'VBP'] and \
-                  pos.split('_')[2] in ['NN', 'NNS'])]
-    
-udf_filter_pos_combs = F.udf(filter_pos_combs, T.ArrayType(T.StringType()))
-
-nlpModel = nlpModel.withColumn('filtered_ngrams',
-                        udf_filter_pos_combs(F.col('finished_ngrams'),
-                                    F.col('finished_pos_ngrams')))
-
-gc.collect()
-
-nlpModel.select('filtered_ngrams').limit(5).show(truncate = 90)
-```
-
-    [Stage 12:>                                                         (0 + 1) / 1]
-
-    +------------------------------------------------------------------------------------------+
-    |                                                                           filtered_ngrams|
-    +------------------------------------------------------------------------------------------+
-    |                                                                                        []|
-    |[im_afraid, afraid_ive, be_deal, day_long, long_severe, severe_dissociative, dissociati...|
-    |                                                                            [have_tension]|
-    |                                                                 [lamotriginehey_everyone]|
-    |[short_discussion, film_numb, only_pop, pop_culture, culture_focus, depersonalization_i...|
-    +------------------------------------------------------------------------------------------+
-    
-
-
-                                                                                    
-
-
-```python
-from pyspark.sql.functions import concat
-
-processed_review = nlpModel.withColumn('final', 
-                            concat(F.col('filtered_unigrams'), 
-                                    F.col('filtered_ngrams')))
-processed_review.select('final').limit(5).show(truncate=90)
-processed_review.columns
-
-processed_review.toPandas().to_csv('preprocessed xgrams.csv')
-```
-
-                                                                                    
-
-    +------------------------------------------------------------------------------------------+
-    |                                                                                     final|
-    +------------------------------------------------------------------------------------------+
-    |                                                                               [way, lose]|
-    |[im, afraid, ive, deal, day, dissociative, episodeim, far, ive, never, scary, relate, w...|
-    |                                                                [feel, like, have_tension]|
-    |                                              [parnate, everyone, lamotriginehey_everyone]|
-    |[short, discussion, pop, culture, depersonalization, aware, ofits, film, star, perry, h...|
-    +------------------------------------------------------------------------------------------+
-    
-
-
-                                                                                    
-
-
-```python
-#VECTORIZATION -> Term Frequency Inverse Document Frequency
-
-from pyspark.ml.feature import CountVectorizer
-tfizer = CountVectorizer(inputCol='final', outputCol='tf_features')
-tf_model = tfizer.fit(processed_review)
-tf_result = tf_model.transform(processed_review)
-
-from pyspark.ml.feature import IDF
-idfizer = IDF(inputCol='tf_features', outputCol='tf_idf_features')
-idf_model = idfizer.fit(tf_result)
-tfidf_result = idf_model.transform(tf_result)
-tfidf_result.columns
-```
-
-                                                                                    
-
-
-
-
-    ['post',
-     'finished_unigrams',
-     'finished_ngrams',
-     'finished_pos',
-     'finished_pos_ngrams',
-     'filtered_unigrams',
-     'filtered_ngrams',
-     'final',
-     'tf_features',
-     'tf_idf_features']
-
-
-
-
-```python
-tfidf_result.toPandas().to_csv('TF-IDF Results.csv')
-```
-
-    22/07/25 23:56:58 WARN DAGScheduler: Broadcasting large task binary with size 1195.4 KiB
-
-
-                                                                                    
-
-
-```python
-num = [ x for x in range(1, 30) if x % 2 == 0]
-num
-```
-
-
-
-
-    [2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28]
-
-
-
-
-```python
-#Find optimal number of topics   
-from tqdm.notebook import tqdm, trange
-from time import sleep
-from pyspark.ml.clustering import LDA
-
-max_iter = 10
-perplex = []
-loglike = []
-for i in tqdm(num):
-    num_topics = i
-    lda = LDA(k=num_topics, maxIter=max_iter, featuresCol='tf_idf_features')
-    lda_model = lda.fit(tfidf_result)
-    ll = lda_model.logLikelihood(tfidf_result)
-    lp = lda_model.logPerplexity(tfidf_result)
-    loglike.append(ll)
-    perplex.append(lp)
-    sleep(0.01)
-```
-
-
-      0%|          | 0/14 [00:00<?, ?it/s]
-
-
-```python
-import matplotlib.pyplot as plt
-plt.plot(num,perplex, marker='o')
-plt.title('upper bound on perplexity', fontsize=14)
-plt.xlabel('numTopics', fontsize=14)
-plt.grid(True)
-plt.show()
-```
-
-
-    
-![png](SparkNLP_tf-idf_LDA_files/SparkNLP_tf-idf_LDA_16_0.png)
-    
-
-
-
-```python
-plt.plot(num,loglike, marker='o')
-plt.title("lower bound on the log likelihood", fontsize=14)
-plt.xlabel('NumTopics', fontsize=14)
-plt.grid(True)
-plt.show()
-```
-
-
-    
-![png](SparkNLP_tf-idf_LDA_files/SparkNLP_tf-idf_LDA_17_0.png)
-    
-
-
-
-```python
-#LDA
-lda = LDA(k=7, maxIter=10, featuresCol='tf_idf_features')
-lda_model = lda.fit(tfidf_result)
-```
-                                                                                    
-
-
-```python
-vocab = tf_model.vocabulary
-
-topics = lda_model.describeTopics()   
-topics_rdd = topics.rdd
-
-topics_words = topics_rdd\
-       .map(lambda row: row['termIndices'])\
-       .map(lambda idx_list: [vocab[idx] for idx in idx_list])\
-       .collect()
-
-for idx, topic in enumerate(topics_words):
-    print("topic: {}".format(idx))
-    print("*"*25)
-    for word in topic:
-       print(word)
-    print("*"*25)
-```
-
-    topic: 0
-    *************************
-    dpdr
-    feel
-    im
-    recover
-    come
-    even
-    weed
-    dont
-    love
-    didnt
-    *************************
-    topic: 1
-    *************************
-    low
-    gt
-    same_time
-    miss
-    vision
-    gt_panic
-    loss
-    eye
-    couple
-    thing
-    *************************
-    topic: 2
-    *************************
-    know
-    feel
-    alone
-    existential
-    like
-    way
-    say
-    get_dpdr
-    smoke
-    really
-    *************************
-    topic: 3
-    *************************
-    like
-    feel
-    relate
-    anyone
-    help
-    visual
-    detach
-    go
-    care
-    appreciate
-    *************************
-    topic: 4
-    *************************
-    like
-    feel
-    look
-    dont
-    im
-    thoughts
-    remember
-    sleep
-    seem
-    anyone
-    *************************
-    topic: 5
-    *************************
-    feel
-    cause
-    trauma
-    dpdr
-    well
-    start
-    long
-    wonder
-    anyone
-    use
-    *************************
-    topic: 6
-    *************************
-    feel
-    im
-    like
-    get
-    go
-    dpdr
-    bad
-    cant
-    thing
-    ive
-    *************************
-
