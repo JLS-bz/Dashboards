@@ -68,7 +68,7 @@ A popular and easy way to retrieve data from Reddit is through the [**PushShift.
 
 As a result, the more manual use of PushShift.io itself is utilized, due to its 100% operational status as seen [here](https://stats.uptimerobot.com/l8RZDu1gBG). Screenshot taken on Jan 17, 2023:
 
-<img src="Images/Pushshift_status.png" width="400"/>
+<center><img src="Images/Pushshift_status.png" width="400"/></center>
 
 However, there are still some limitations:
 1. Reddit's PushShift.io fundamentally limits each post retrieval amount to 1000.
