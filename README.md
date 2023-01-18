@@ -123,7 +123,7 @@ Unigram and n-gram data as shown above are first combined. Then, **TF** (term fr
 
 *Direct quotation from Kulshrestha (2020)*
 
-When performing LDA, the number of topics is fixed and predetermined. To find the optimal number of topics, LDA models with num topics are trained and their corresponding logLikelihood and logPerplexity calculated.
+When performing LDA, the number of topics is fixed and predetermined. To find the optimal number of topics, LDA models with x number of topics are trained and their corresponding logLikelihood and logPerplexity calculated.
 
 ![](Images/likelihood.png) ![](Images/perplexity.png)
 
