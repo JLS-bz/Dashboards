@@ -158,9 +158,6 @@ LDA relies on a random number generator for initialization, and using a seed can
 
 ![](Images/lda_ngrams.png)<!-- -->
 
-https://drive.google.com/file/d/15Y9txc098kAOcK4GLBYSuC5lMraoPjJc/view?usp=share_link
-
-
 ![image](https://drive.google.com/uc?export=view&id=15Y9txc098kAOcK4GLBYSuC5lMraoPjJc)<!-- -->
 
 
