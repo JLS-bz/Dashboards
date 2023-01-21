@@ -25,18 +25,12 @@
 
 ## Centrality of Words
 
-    ## Warning in graph_from_data_frame(x, directed = directed): In `d' `NA' elements
-    ## were replaced with string "NA"
-
-    ## Warning: ggrepel: 140 unlabeled data points (too many overlaps). Consider
-    ## increasing max.overlaps
-
 ![](Images/CentralityWords.png)<!-- -->
 
 # Section 2: Topic Modeling with TF-IDF and LDA
 > Large segments of code were adapted from Obedkova's (2020) tutorial, namely in the following sections: SparkNLP Pipelines, PoS-based Filtering, and Vectorization.
 
-## Dependencies: 
+## Dependencies:
 ``` python
 # Install pyspark
 ! pip install pyspark==3.3.0
@@ -128,15 +122,10 @@ When performing LDA, the number of topics is fixed and predetermined. To find th
 
 ![](Images/likelihood.png) ![](Images/perplexity.png)
 
-Thus, it seems that the optimal number of topics is between 5 and 10; an eye estimated NumTopic = 6 will be utilized.
-
-Finally, words that most embody these six topics are extracted:
-![](Images/extracted_topic_words.png)<!-- -->
-
-From a glance, these topic words do not seem very coherent. So, TF-IDF and LDA will be performed again for unigrams and n-grams separately.
+Thus, it seems that an eye estimated optimal number of topics is NumTopic = 5.
 
 Given that the LDA algorithm is probabilistic in nature, the following two parameters will be set for further topic modeling:
-1. Max iterations = 40.
+1. Max iterations = 200.
 
 The previous LDA was set to maxIter = 10. Increasing the number of iterations can help improve result stability, at the cost of increased computational resources.
 
