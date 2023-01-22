@@ -136,14 +136,14 @@ LDA relies on a random number generator for initialization, and using a seed can
 **Topics based on Unigrams & N-Grams:**
 
 <p float="left">
-  <img src="https://github.com/JLS-bz/Dashboards/blob/main/Images/chart_0_0.png" width="280" height="230" />
-  <img src="https://github.com/JLS-bz/Dashboards/blob/main/Images/chart_0_1.png" width="280" height="230" /> 
-  <img src="https://github.com/JLS-bz/Dashboards/blob/main/Images/chart_0_2.png" width="280" height="230" />
+  <img src="https://github.com/JLS-bz/Dashboards/blob/main/Images/chart_0_0.png" width="275" height="230" />
+  <img src="https://github.com/JLS-bz/Dashboards/blob/main/Images/chart_0_1.png" width="275" height="230" /> 
+  <img src="https://github.com/JLS-bz/Dashboards/blob/main/Images/chart_0_2.png" width="275" height="230" />
 </p>
 
 <p float="left">
-  <img src="https://github.com/JLS-bz/Dashboards/blob/main/Images/chart_0_3.png" width="280" height="230" />
-  <img src="https://github.com/JLS-bz/Dashboards/blob/main/Images/chart_0_4.png" width="280" height="230" />
+  <img src="https://github.com/JLS-bz/Dashboards/blob/main/Images/chart_0_3.png" width="275" height="230" />
+  <img src="https://github.com/JLS-bz/Dashboards/blob/main/Images/chart_0_4.png" width="275" height="230" />
 </p>
 
 ![](Images/chart_0_0.png | width=100) ![](Images/chart_0_1.png | width=100)
