@@ -163,15 +163,15 @@ LDA relies on a random number generator for initialization, and using a seed can
 **Topics based on N-Grams:**
 
 <p float="left">
-  <img src="https://github.com/JLS-bz/Dashboards/blob/main/Images/chart_2_0.png" width="255" height="230" />
-  <img src="https://github.com/JLS-bz/Dashboards/blob/main/Images/chart_2_1.png" width="255" height="230" /> 
+  <img src="https://github.com/JLS-bz/Dashboards/blob/main/Images/chart_2_0.png" width="300" height="230" />
+  <img src="https://github.com/JLS-bz/Dashboards/blob/main/Images/chart_2_1.png" width="300" height="230" /> 
 </p>
 
 <img src="https://github.com/JLS-bz/Dashboards/blob/main/Images/chart_2_2.png" height="230" />
 
 <p float="left">
-  <img src="https://github.com/JLS-bz/Dashboards/blob/main/Images/chart_2_3.png" width="255" height="230" />
-  <img src="https://github.com/JLS-bz/Dashboards/blob/main/Images/chart_2_4.png" width="255" height="230" />
+  <img src="https://github.com/JLS-bz/Dashboards/blob/main/Images/chart_2_3.png" width="300" height="230" />
+  <img src="https://github.com/JLS-bz/Dashboards/blob/main/Images/chart_2_4.png" width="300" height="230" />
 </p>
 
 
