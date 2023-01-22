@@ -165,8 +165,9 @@ LDA relies on a random number generator for initialization, and using a seed can
 <p float="left">
   <img src="https://github.com/JLS-bz/Dashboards/blob/main/Images/chart_2_0.png" width="255" height="230" />
   <img src="https://github.com/JLS-bz/Dashboards/blob/main/Images/chart_2_1.png" width="255" height="230" /> 
-  <img src="https://github.com/JLS-bz/Dashboards/blob/main/Images/chart_2_2.png" width="255" height="230" />
 </p>
+
+<img src="https://github.com/JLS-bz/Dashboards/blob/main/Images/chart_2_2.png" width="285" height="230" />
 
 <p float="left">
   <img src="https://github.com/JLS-bz/Dashboards/blob/main/Images/chart_2_3.png" width="255" height="230" />
