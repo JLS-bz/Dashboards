@@ -134,13 +134,10 @@ The previous LDA was set to maxIter = 10. Increasing the number of iterations ca
 LDA relies on a random number generator for initialization, and using a seed can help ensure consistency across multiple runs.
 
 **Topics based on Unigrams & N-Grams:**
-<div style="display: flex;">
-  <img src="Images/chart_0_0.png" width="55%">
-  <img src="Images/chart_0_1.png" width="55%">
-  <img src="Images/chart_0_2.png" width="55%">
-  <img src="Images/chart_0_3.png" width="55%">
-  <img src="Images/chart_0_4.png" width="55%">
-</div>
+
+![](Images/chart_0_0.png) ![](Images/chart_0_1.png)
+
+![](Images/chart_0_2.png) ![](Images/chart_0_3.png) ![](Images/chart_0_4.png)
 
 
 
