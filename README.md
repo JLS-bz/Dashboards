@@ -135,11 +135,11 @@ LDA relies on a random number generator for initialization, and using a seed can
 
 **Topics based on Unigrams & N-Grams:**
 
-![](Images/chart_0_0.png| width=100) ![](Images/chart_0_1.png| width=100)
+![](Images/chart_0_0.png | width=100) ![](Images/chart_0_1.png | width=100)
 
-![](Images/chart_0_2.png| width=100) ![](Images/chart_0_3.png| width=100) 
+![](Images/chart_0_2.png | width=100) ![](Images/chart_0_3.png | width=100) 
 
-![](Images/chart_0_4.png| width=100)
+![](Images/chart_0_4.png | width=100)
 
 
 
