@@ -146,24 +146,33 @@ LDA relies on a random number generator for initialization, and using a seed can
   <img src="https://github.com/JLS-bz/Dashboards/blob/main/Images/chart_0_4.png" width="255" height="230" />
 </p>
 
-![](Images/chart_0_0.png | width=100) ![](Images/chart_0_1.png | width=100)
-
-![](Images/chart_0_2.png | width=100) ![](Images/chart_0_3.png | width=100) 
-
-![](Images/chart_0_4.png | width=100)
-
-
-
 **Topics based on Unigrams:**
 
-![](Images/lda_unigrams.png)<!-- -->
+<p float="left">
+  <img src="https://github.com/JLS-bz/Dashboards/blob/main/Images/chart_1_0.png" width="255" height="230" />
+  <img src="https://github.com/JLS-bz/Dashboards/blob/main/Images/chart_1_1.png" width="255" height="230" /> 
+  <img src="https://github.com/JLS-bz/Dashboards/blob/main/Images/chart_1_2.png" width="255" height="230" />
+</p>
+
+<p float="left">
+  <img src="https://github.com/JLS-bz/Dashboards/blob/main/Images/chart_1_3.png" width="255" height="230" />
+  <img src="https://github.com/JLS-bz/Dashboards/blob/main/Images/chart_1_4.png" width="255" height="230" />
+</p>
 
 
 **Topics based on N-Grams:**
 
-![](Images/lda_ngrams.png)<!-- -->
+<p float="left">
+  <img src="https://github.com/JLS-bz/Dashboards/blob/main/Images/chart_2_0.png" width="255" height="230" />
+  <img src="https://github.com/JLS-bz/Dashboards/blob/main/Images/chart_2_1.png" width="255" height="230" /> 
+  <img src="https://github.com/JLS-bz/Dashboards/blob/main/Images/chart_2_2.png" width="255" height="230" />
+</p>
 
-![image](https://drive.google.com/uc?export=view&id=15Y9txc098kAOcK4GLBYSuC5lMraoPjJc)<!-- -->
+<p float="left">
+  <img src="https://github.com/JLS-bz/Dashboards/blob/main/Images/chart_2_3.png" width="255" height="230" />
+  <img src="https://github.com/JLS-bz/Dashboards/blob/main/Images/chart_2_4.png" width="255" height="230" />
+</p>
+
 
 
 ## Data Visualization
