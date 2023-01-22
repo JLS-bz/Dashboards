@@ -134,14 +134,13 @@ The previous LDA was set to maxIter = 10. Increasing the number of iterations ca
 LDA relies on a random number generator for initialization, and using a seed can help ensure consistency across multiple runs.
 
 **Topics based on Unigrams & N-Grams:**
-<img src="https://github.com/JLS-bz/Dashboards/blob/main/Images/chart_0_0.png" width="280" height="230">
 
 <p float="left">
-  <img src="https://github.com/JLS-bz/Dashboards/blob/main/Images/chart_0_0.png" width="100" />
-  <img src="https://github.com/JLS-bz/Dashboards/blob/main/Images/chart_0_1.png" width="100" /> 
-  <img src="https://github.com/JLS-bz/Dashboards/blob/main/Images/chart_0_2.png" width="100" />
-  <img src="https://github.com/JLS-bz/Dashboards/blob/main/Images/chart_0_3.png" width="100" />
-  <img src="https://github.com/JLS-bz/Dashboards/blob/main/Images/chart_0_4.png" width="100" />
+  <img src="https://github.com/JLS-bz/Dashboards/blob/main/Images/chart_0_0.png" width="280" height="230" />
+  <img src="https://github.com/JLS-bz/Dashboards/blob/main/Images/chart_0_1.png" width="280" height="230" /> 
+  <img src="https://github.com/JLS-bz/Dashboards/blob/main/Images/chart_0_2.png" width="280" height="230" />
+  <img src="https://github.com/JLS-bz/Dashboards/blob/main/Images/chart_0_3.png" width="280" height="230" />
+  <img src="https://github.com/JLS-bz/Dashboards/blob/main/Images/chart_0_4.png" width="280" height="230" />
 </p>
 
 
